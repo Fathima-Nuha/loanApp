@@ -1,0 +1,69 @@
+
+<div class="top-container" >
+		<div class="table-listing" >
+			<%if @loan%>
+				<h2 class="text-center m-4">Repay your loan</h2>
+				<table class="table container text-center" style="width: 50%;">
+					<tbody>
+						 <tr>
+						  <th scope="row">Loan No</th>
+						  <td>LAC000<%=@loan.id%></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Principle Amount</th>
+						  <td>Rs <%=@loan.loan_amount%></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Interest Amount</th>
+						  <td>Rs <%=@loan.amount_to_repay - @loan.loan_amount%></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Total</th>
+						  <td>Rs <%=@loan.amount_to_repay %></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Balance Amount To Settle</th>
+						  <td>Rs<%= @loan.amount_to_repay - @repayed_sum %></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Total Amount Payed</th>
+						  <td>Rs <%= @repayed_sum %></td>
+						</tr>
+
+					</tbody>
+				</table>
+			<%else%>
+				<h6 class="text-center m-4">You have no loans requested</h6>
+			<%end%>
+		</div>
+	</div>
+	<%if @loan.status!="Closed"%>
+	<div class="bottom-container"> 
+
+		<div class="d-flex justify-content-center " >
+		<br>
+			<div class="request_loan d-flex">
+
+				<%= form_with model: @repayment,url: repay_amount_path, method: :post  do |form| %>
+					<div class="d-flex flex-column  form-control mb-3">
+						<%=form.label :"Enter Amount To Repay"%>
+						<%=form.text_field :amount%>
+						</div>
+						<%= form.hidden_field :loan_id, value: @loan.id %>
+					<div class="d-flex justify-content-center">
+	  					<%= form.submit "Pay", class: "btn btn-primary" %>
+					</div>
+
+				<% end %>
+
+			</div>
+		</div>
+		</div>
+	<%end%>
+
+	

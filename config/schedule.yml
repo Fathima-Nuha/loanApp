@@ -1,0 +1,4 @@
+interest_calculator:
+  cron: "*/5 * * * *"
+  class: "InterestCalculatorJob"
+  queue: default

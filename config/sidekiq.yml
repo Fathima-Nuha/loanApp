@@ -1,0 +1,4 @@
+:schedule:
+  - cron: "*/5 * * * *"
+    class: "CalculateInterestJob"
+    queue: default

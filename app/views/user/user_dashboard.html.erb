@@ -1,0 +1,130 @@
+
+<%= render partial: 'shared/navbar' %>
+<!-- 
+<h1>User Dashboard </h1>
+<h1><%#= current_user.email%></h1> -->
+<div class="main-container">
+	<div class="top-container mt-4 d-flex container justify-content-around">
+		<div class="left-container "> 
+			<h2 style="text-align:center;">Request For New Loan</h2>
+
+			<div class="d-flex justify-content-center " >
+			<br>
+
+				<div class="request_loan d-flex">
+
+					<%= form_with model: @loan ,url: request_loan_path, method: :post  do |form| %>
+	  				<div class="d-flex flex-column  form-control mb-3">
+					<%=form.label :"Enter Loan Amount Needed"%>
+					<%=form.text_field :amount%>
+					</div>
+					<div>
+	      			<%= form.submit "Request", class: "btn btn-primary" %>
+					</div>
+
+					<% end %>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="right-container"> 
+			<h2 style="text-align:center;">Repay Your Loan</h2>
+
+				<div class="d-flex justify-content-center " >
+				<br>
+
+					<div class="request_loan d-flex">
+
+						<%= form_with model: @loan ,url: repay_loan_details_path, method: :post  do |form| %>
+	  					<div class="d-flex flex-column  form-control mb-3">
+						<%=form.label :"Enter Loan Account Number"%>
+						<%=form.text_field :loan_id%>
+						</div>
+						<div>
+	      				<%= form.submit "Repay", class: "btn btn-primary" %>
+						</div>
+
+						<% end %>
+
+					</div>
+				</div>
+		</div>
+	</div>
+	<hr>
+	<div class="bottom-container" >
+		<div class="table-listing" >
+			<%if @approved_loans.length != 0%>
+				<h2 class="text-center m-4">Confirm Your Interest Rate</h2>
+				<table class="table container text-center">
+					<thead>
+						<tr>
+						  <th scope="col">Loan No</th>
+						  <th scope="col">Amount</th>
+						  <th scope="col">Interest Rate</th>
+						  <th scope="col">Open / Close Loan</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%@approved_loans.each do |loan|%>
+						 <tr>
+						  <th scope="row">LAC000<%=loan.id%></th>
+						  <td><%= loan.loan_amount%></td>
+						  <td><%= loan.interest_rate%></td>
+						  <td class="d-flex justify-content-around">
+						  	 <%= form_tag(open_loan_path, method: :get) do %>
+							      <%= hidden_field_tag :loan_id, loan.id %>
+							      <%= submit_tag "Accept", class: "btn btn-success" %>
+						    <% end %>
+						    <%= form_tag(reject_loan_path, method: :get) do %>
+							      <%= hidden_field_tag :loan_id, loan.id %>
+							      <%= submit_tag "Reject", class: "btn btn-danger" %>
+						    <% end %>
+						  </td>
+						</tr>
+
+						<%end%>
+					</tbody>
+				</table>
+			<%else%>
+				<h6 class="text-center m-4">You have no loans requested</h6>
+			<%end%>
+		</div>
+	</div>
+	<hr>
+	<div class="bottom-container table2" >
+		<div class="table-listing" >
+			<h2 class="text-center m-4">Find Your Loans</h2>
+			<table class="table container text-center">
+				<thead>
+					<tr>
+					  <th scope="col">Loan No</th>
+					  <th scope="col">Amount</th>
+					  <th scope="col">Interest Rate</th>
+					  <th scope="col">Amount to be repayed</th>
+					  <th scope="col">View Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%@your_loans.each do |loan|%>
+					 <tr>
+					  <th scope="row">LAC000<%=loan.id%></th>
+					  <td><%= loan.loan_amount%></td>
+					  <td><%= loan.interest_rate%></td>
+					  <td><%= loan.amount_to_repay%></td>
+					  <td class="d-flex flex-column justify-content-around">
+					  	<button style="pointer-events: none;" class="btn btn-info"> <%=loan.status%>
+					  	</button>
+					  	<%= form_tag(view_details_path, method: :get) do %>
+						      <%= hidden_field_tag :loan_id, loan.id %>
+						      <%= submit_tag "View Details" , class: "btn" %>
+					    <% end %>
+					  </td>
+					</tr>
+
+					<%end%>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

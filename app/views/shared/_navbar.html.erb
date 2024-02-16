@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light ">
+  <a class="navbar-brand m-4" href="#">Loan Lender</a>
+<p class="navbar-brand m-4 ", style="width:50%; text-align: center;font-size: 30px;">Welcome <%= current_user.name%></p>
+<p class="navbar-brand m-4 ">Wallet Balance: Rs<%= current_user.wallet.money%></p>
+  <!-- <#%= link_to 'Twitter Accounts', twitter_accounts_path,class: 'btn'%> -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse  justify-content-end" id="navbarSupportedContent">
+
+    <ul class="navbar-nav m-4">
+      <li class="nav-item active">
+        <!-- <a class="nav-link " href='login/destroy'>Logout</a> -->
+        <%= button_to "Logout", logout_path, method: :delete%>
+
+        <%= button_to "Delete Account", delete_account_path(current_user), method: :delete%>
+        <!-- <a class="nav-link flex-wrap" href='login/delete_account/:id'>Delete Account</a> -->
+
+      </li>
+      <li class="nav-item active">
+       <!--  <a class="nav-link flex-wrap " href='login/destroy'>Delete Account</a>
+        <a class="nav-link flex-wrap " href='login/destroy'>Delete Account</a> -->
+      </li>
+     <!--  <li class="nav-item active">
+        <a class="nav-link" href="/tweets">Tweets</a>
+      </li> -->
+      <!-- <li class="nav-item"> -->
+      	<!-- <#%= link_to "Connect to twitter","/auth/twitter"%> -->
+
+      	<!-- <#%= button_to "Connect Twitter", '/auth/twitter',method: :post%> -->
+      <!-- </li> -->
+    
+    </ul>
+   
+  </div>
+</nav>
+
+

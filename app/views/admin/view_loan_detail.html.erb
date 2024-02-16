@@ -1,0 +1,79 @@
+
+<div class="top-container" >
+		<div class="table-listing" >
+			<%if @loan%>
+				<h2 class="text-center m-4"><%=current_user.role=="admin"? "Loan Details" : "Repay your loan"%></h2>
+				<table class="table container text-center" style="width: 50%;">
+					<tbody>
+						<tr>
+						  <th scope="row">User No</th>
+						  <td>USR000<%=@loan.user.id%></td>
+						</tr>
+						 <tr>
+						  <th scope="row">Loan No</th>
+						  <td>LAC000<%=@loan.id%></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Principle Amount</th>
+						  <td>Rs <%=@loan.loan_amount%></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Interest Amount</th>
+
+						  <td>Rs <%= (@loan.amount_to_repay > 0 ? @loan.amount_to_repay - @loan.loan_amount : 0) %>
+						  	
+						  </td>
+
+						</tr>
+
+						<tr>
+						  <th scope="row">Total</th>
+						  <td>Rs <%=@loan.amount_to_repay %></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Repayment details</th>
+						  <th scope="row">Payment ID</th>
+						  <th scope="row">Date of payment</th>
+						  <th scope="row">Amount Payed</th>
+						</tr>
+
+						<%@repayment_details.each do |repayment|%>
+						<tr>
+						  <td scope="row">	</td>
+						  <td scope="row">PAY000<%= repayment.id%></td>
+						  <td scope="row"><%= repayment.payment_date.strftime("%d %B %Y")%></td>
+						  <td scope="row">Rs <%= repayment.amount%></td>
+						</tr>
+						<%end%>
+						<%if @repayment_details%>
+						<tr>
+						  <td scope="row">User hasnt payed yet</th>
+						</tr>
+						<%end%>
+						
+						<tr>
+						  <th scope="row">Balance Amount To Settle</th>
+						  <td>Rs <%= @loan.amount_to_repay - @repayed_sum %></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Total Amount Payed</th>
+						  <td>Rs <%= @repayed_sum %></td>
+						</tr>
+
+						<tr>
+						  <th scope="row">Status</th>
+						  <th><%= @loan.status%></th>
+						</tr>
+
+					</tbody>
+				</table>
+			<%else%>
+				<h6 class="text-center m-4">You have no loans requested</h6>
+			<%end%>
+		</div>
+	</div>
+

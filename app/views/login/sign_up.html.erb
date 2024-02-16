@@ -1,0 +1,42 @@
+<!-- <h1>Registration#new</h1>
+<p>Find me in app/views/registration/new.html.erb</p> -->
+<h1 class="text-center mb-3 mt-3">Sign Up</h1>
+
+<%= form_with model: @user, url: register_path,method: :post do |form| %>
+<% if flash[:error].present? %>
+    <div class="alert alert-danger">
+      <strong>Error!</strong> <%= flash[:error] %>
+    </div>
+    <%end%>
+
+  <div class="m-auto" style="width:30%">
+    <div class="d-flex flex-column form-control mb-3">
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div> <div class="d-flex flex-column form-control mb-3">
+      <%= form.label :email %>
+      <%= form.text_field :email %>
+    </div>
+    <div class="d-flex flex-column form-control mb-3">
+      <%= form.label :password %>
+      <%= form.password_field :password %>
+    </div>
+    <div class="d-flex flex-column form-control mb-3">
+      <%= form.label :confirm_password %>
+      <%= form.password_field :password_confirmation %>
+    </div>
+
+    <div class="text-center m-auto d-block mb-3">
+      <%= form.submit "Submit", class: "btn btn-primary" %>
+    </div>
+
+<p>already have an account?</p>
+    <div class="alert alert-info ", style="text-align: center;">
+      
+      <%= link_to "Sign In", root_path%>
+
+    </div>
+    
+  </div>
+
+<% end %>

@@ -1,0 +1,6 @@
+:schedule:
+  interest_calculator:
+    cron: "*/5 * * * *" # Run every 2 minutes
+    class: 'InterestCalculatorJob'
+    queue: default
+    

@@ -1,0 +1,116 @@
+ <script>
+  $(document).ready(function () {
+    // Focus on the first editable field when the page loads
+    $('.editable:first').focus();
+
+    // Handle blur event to update the data
+     $('.btn-approve').on('click', function (e) {
+     	e.preventDefault();
+     	const loanId = $(this).data('loan-id');
+      	const newInterestRate = $(this).closest('tr').find('.editable').text();
+      // const loanId = $(this).data('loan-id');
+      // const newInterestRate = $(this).text();
+
+      // Perform AJAX request to update the interest rate
+      $.ajax({
+        method: 'PATCH',
+        url: 'admin/update_loan' + '/' + loanId, // Adjust the URL to your Rails route
+        data: { interest_rate: newInterestRate },
+        beforeSend: function (xhr) {
+    	xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+  		},
+        success: function (response) {
+          // Handle success
+          location.reload();
+
+        },
+        error: function (error) {
+          // Handle error
+        }
+      });
+    });
+  });
+</script>
+ <%= render partial: 'shared/navbar' %>
+<div class="top-container" >
+	<div class="table-listing" >
+		<%if @loans.length != 0%>
+			<h2 class="text-center m-4">Requested Loans</h2>
+			<table class="table container text-center">
+				<thead>
+					<tr>
+					  <th scope="col">User Id</th>
+					  <th scope="col">Loan No</th>
+					  <th scope="col">Amount</th>
+					  <th scope="col">Interest Rate</th>
+					  <th scope="col">Open / Close Loan</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%@loans.each do |loan|%>
+					 <tr>
+					 	<th>USR000<%= loan.user.id%></th>
+					  <th scope="row">LAC000<%=loan.id%></th>
+					  <td><%= loan.loan_amount%></td>
+					  <td class="editable" data-loan-id="<%= loan.id %>" contenteditable="true" style="cursor: pointer;"><%= loan.interest_rate%></td>
+
+					  <td class="d-flex justify-content-around">
+					  	<button data-loan-id="<%= loan.id %>" class="btn-approve btn btn-success">Approve</button>
+
+					  	<!--  <#%= form_tag(open_loan_path, method: :get) do %>
+						      <#%= hidden_field_tag :loan_id, loan.id %>
+						      <#%= submit_tag "Approve", class: "btn btn-success" %>
+					    <#% end %> -->
+					    <%= form_tag(admin_reject_loan_path, method: :get) do %>
+						      <%= hidden_field_tag :loan_id, loan.id %>
+						      <%= submit_tag "Reject", class: "btn btn-danger" %>
+					    <% end %>
+					  </td>
+					</tr>
+
+					<%end%>
+				</tbody>
+			</table>
+		<%else%>
+			<h6 class="text-center m-4">You have no loans requested</h6>
+		<%end%>
+	</div>
+</div>
+
+<div class="bottom-container table2" >
+		<div class="table-listing" >
+			<h2 class="text-center m-4">Loans</h2>
+			<table class="table container text-center">
+				<thead>
+					<tr>
+					  <th scope="col">User Id</th>
+					  <th scope="col">Loan No</th>
+					  <th scope="col">Amount</th>
+					  <th scope="col">Interest Rate</th>
+					  <th scope="col">Amount to be repayed</th>
+					  <th scope="col">View Details</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%@all_loans.each do |loan|%>
+					 <tr>
+					  <th scope="row">USR000<%=loan.user.id%></th>
+					  <th scope="row">LAC000<%=loan.id%></th>
+					  <td><%= loan.loan_amount%></td>
+					  <td><%= loan.interest_rate%></td>
+					  <td><%= loan.amount_to_repay%></td>
+					  <td class="d-flex flex-column justify-content-around">
+					  	<button style="pointer-events: none;" class="btn btn-info"> <%=loan.status%>
+					  	</button>
+					  	<%= form_tag(admin_view_details_path, method: :get) do %>
+						      <%= hidden_field_tag :loan_id, loan.id %>
+						      <%= submit_tag "View Details" , class: "btn" %>
+					    <% end %>
+					  </td>
+					</tr>
+
+					<%end%>
+				</tbody>
+			</table>
+		</div>
+	</div>
