@@ -39,7 +39,8 @@ gem "bcrypt", "~> 3.1.7"
 # Gemfile
 gem "sidekiq"
 gem 'sidekiq-cron', '~> 1.1'
-
+gem 'database_cleaner'
+ 
 # gem 'whenever', require: false
 
 
