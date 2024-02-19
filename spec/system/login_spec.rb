@@ -15,7 +15,18 @@ RSpec.describe "Sign up", type: :system do
 	# 	expect(page).to have_content("Error! Email already exists. Please choose a different one.")	
 
 	# end
+		
+	
+	  it "Successful admin login" do 
+	    user = FactoryBot.create(:user)
+		visit root_path
+		fill_in "email", with:"admin@example.com"
+		fill_in "password", with:"password"
+		click_button "Login"
+		expect(page).to have_content("Welcome #{user.name}")	
+		# click_button "Logout"
 
+	end
 
 	it "Enter user details" do
 		visit sign_up_path
@@ -24,8 +35,10 @@ RSpec.describe "Sign up", type: :system do
 		fill_in "user_password", with: "passw"
 		fill_in "user_password_confirmation", with: "passw"
 		click_button "Submit"
+		expect(page).to have_content("Rs10000")	
 		click_button "Logout"
 	end
+
 it "Invalid User " do
 		visit root_path
 		expect(page).to have_content("Email")
@@ -50,9 +63,80 @@ it "Invalid User " do
 		fill_in "email", with: "fathimanuha0002@gmail.com"
 		fill_in "password", with: "passw"
 		click_button "Login"
-		expect(page).to have_content("Welcome #{user.name}")	
+		expect(page).to have_content("Welcome #{user.name}")
+		click_button "Logout"	
+
 
 	end
+
+	it "Request for loan" do
+		visit root_path
+		fill_in "email", with: "fathimanuha0002@gmail.com"
+		fill_in "password", with: "passw"
+		click_button "Login"
+		fill_in "loan_amount", with:"2000"
+		click_button "Request"
+	end
+
+	it "Check for requested loan in admin" do 
+		# user = FactoryBot.create(:userr)
+		visit root_path
+		fill_in "email", with: "fathimanuha0002@gmail.com"
+		fill_in "password", with: "passw"
+		click_button "Login"
+
+		fill_in "loan_amount", with:"5000"
+		click_button "Request"
+
+
+		loan_id = find(:xpath,'/html/body/div/div[3]/div/table/tbody/tr[1]/th').text
+		amount =  find(:xpath,'/html/body/div/div[3]/div/table/tbody/tr[1]/td[1]').text
+		puts "loan_id",loan_id
+		puts "amount",amount
+		click_button "Logout"
+		# visit root_path
+
+		fill_in "email", with:"admin@example.com"
+		fill_in "password", with:"password"
+		click_button "Login"
+		loan_id_element = find(:xpath,'/html/body/div[1]/div/table/tbody/tr[1]/th[2]')
+		puts "loan_id_element",loan_id_element
+	      
+	    if has_selector?(:xpath, loan_id_element.path, text: loan_id)
+	    end
+
+		expect(page).to have_xpath('/html/body/div[1]/div/table', wait: 10)
+		sleep(4)
+
+		 within :xpath, '/html/body/div[1]/div/table/tbody/tr[1]' do
+	      loan_id = find(:xpath, '/html/body/div[1]/div/table/tbody/tr[1]/th[2]').text
+	      expect(page).to have_selector("td", text: amount)
+	      expect(page).to have_selector("td", text: "5.0")
+	      click_button "Approve"
+	 
+	    end
+	end
+
+
+	it 'repayment loan' do 
+		visit root_path
+		fill_in "email", with: "fathimanuha0002@gmail.com"
+		fill_in "password", with: "passw"
+		click_button "Login"
+		sleep(5)
+		#ID of second loan given in previous it block
+		loan_id = find(:xpath,'/html/body/div/div[3]/div/table/tbody/tr[1]/th').text
+		puts "loan_id",loan_id
+		fill_in "loan_loan_id", with:loan_id
+		click_button "Repay"
+		fill_in "amount", with:"100"
+		click_button "Pay"
+
+		
+	end
+
+	
+
 end
 
  
