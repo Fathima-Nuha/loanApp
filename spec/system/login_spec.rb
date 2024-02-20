@@ -106,15 +106,50 @@ it "Invalid User " do
 	    end
 
 		expect(page).to have_xpath('/html/body/div[1]/div/table', wait: 10)
-		sleep(4)
+		sleep(14)
 
 		 within :xpath, '/html/body/div[1]/div/table/tbody/tr[1]' do
 	      loan_id = find(:xpath, '/html/body/div[1]/div/table/tbody/tr[1]/th[2]').text
 	      expect(page).to have_selector("td", text: amount)
 	      expect(page).to have_selector("td", text: "5.0")
 	      click_button "Approve"
-	 
 	    end
+
+	    within :xpath, '/html/body/div[1]/div/table/tbody/tr[1]' do
+	      loan_id = find(:xpath, '/html/body/div[1]/div/table/tbody/tr[1]/th[2]').text
+	      # expect(page).to have_selector("td", text: amount)
+	      # expect(page).to have_selector("td", text: "5.0")
+	      click_button "Approve"
+	    end
+	end
+
+	it 'accept loan from user end' do 
+		user = User.find_by(email:"fathimanuha0002@gmail.com")
+		admin = User.find_by(email:"admin@example.com")
+		visit root_path
+		fill_in "email", with: "fathimanuha0002@gmail.com"
+		fill_in "password", with: "passw"
+		click_button "Login"
+		sleep(15)
+
+		within :xpath, '/html/body/div/div[2]/div/table/tbody/tr[1]' do 
+			click_button "Accept"
+		end
+		visit user_dashboard_path
+		expect(user.wallet.money).to eq(10000+2000)
+		expect(admin.wallet.money).to eq(1000000-2000)
+		# sleep(15)
+	end
+
+	it 'reject loan from user end' do 
+		visit root_path
+		fill_in "email", with: "fathimanuha0002@gmail.com"
+		fill_in "password", with: "passw"
+		click_button "Login" 
+		sleep(15)
+		within :xpath, '/html/body/div/div[2]/div/table/tbody/tr' do 
+			click_button "Reject"
+		end
 	end
 
 
@@ -123,20 +158,45 @@ it "Invalid User " do
 		fill_in "email", with: "fathimanuha0002@gmail.com"
 		fill_in "password", with: "passw"
 		click_button "Login"
-		sleep(5)
+		# sleep(5)
 		#ID of second loan given in previous it block
 		loan_id = find(:xpath,'/html/body/div/div[3]/div/table/tbody/tr[1]/th').text
+		loan_element_id = find(:xpath,'/html/body/div/div[3]/div/table/tbody/tr[1]/th')
 		puts "loan_id",loan_id
 		fill_in "loan_loan_id", with:loan_id
 		click_button "Repay"
 		fill_in "amount", with:"100"
 		click_button "Pay"
+		visit user_dashboard_path
 
+		within :xpath, '/html/body/div/div[3]/div/table/tbody/tr[1]' do 
+			if has_selector?(:xpath, loan_element_id.path, text: loan_id)
+			puts "trueeee2"
+			click_button "View Details"
+
+   		 	end
+		end
 		
+
 	end
 
+	it 'value deducted from user and added to admin' do 
+		user = User.find_by(email:"fathimanuha0002@gmail.com")
+		admin = User.find_by(email:"admin@example.com")
+		expect(user.wallet.money).to eq(10000+2000-100)
+		expect(admin.wallet.money).to eq(1000000-2000+100)
+		# sleep(15)
+	end
+
+	it 'click on view details' do 
+	visit root_path
+		fill_in "email", with: "fathimanuha0002@gmail.com"
+		fill_in "password", with: "passw"
+		click_button "Login"	
+	end
+
+	
 	
 
 end
 
- 

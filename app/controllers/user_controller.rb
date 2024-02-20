@@ -49,7 +49,7 @@ class UserController < ApplicationController
 		current_user.wallet.update(money:(user_wallet_money+user_requested_loan_amount ))
 		admin = User.find_by(role:"admin")
 		admin.wallet.update(money:(admin.wallet.money - user_requested_loan_amount))
-
+		redirect_to user_dashboard_path
 		#status open
 		#created time update .now
 		#wallet action in user and admin add and subtract
@@ -58,6 +58,7 @@ class UserController < ApplicationController
 	def reject_loan
 		rejected_loan = Loan.find(params["loan_id"])
 		rejected_loan.update(status:"Rejected")
+		redirect_to user_dashboard_path
 
 	end
 
