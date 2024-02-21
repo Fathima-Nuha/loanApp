@@ -5,7 +5,15 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'capybara/rspec'
+
 require 'database_cleaner'
+# rspec './spec/system/Login.rb'
+
+
+
+
+
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -45,6 +53,10 @@ RSpec.configure do |config|
     config.before(:each, type: :system) do
     DatabaseCleaner.strategy = :truncation
     end
+  config.include Capybara::DSL, type: :system
+
+  # Include the LoginHelpers module
+    # config.include login
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
