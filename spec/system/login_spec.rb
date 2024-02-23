@@ -5,18 +5,19 @@ require_relative 'login'
 RSpec.describe "Sign up", type: :system do
 	include Login
  include Rails.application.routes.url_helpers
-	# it 'existing user' do 
-	# 	user = User.create(name:"fathima",email:"fathimaa@gmail.com",password:"123",password_confirmation:"123",role:"user")
-	# 	puts "user",user.to_json
-	# 	visit sign_up_path
-	# 	fill_in "user_name", with: "Nuha"
-	# 	fill_in "user_email", with: "fathimaa@gmail.com"
-	# 	fill_in "user_password", with: "passw"
-	# 	fill_in "user_password_confirmation", with: "passw"
-	# 	click_button "Submit"
-	# 	expect(page).to have_content("Error! Email already exists. Please choose a different one.")	
+	it 'existing user' do 
+		user = User.create(name:"fathima",email:"fathimaa@gmail.com",password:"123",password_confirmation:"123",role:"user")
+		puts "user",user.to_json
+		user.save!
+		visit sign_up_path
+		fill_in "user_name", with: "Nuha"
+		fill_in "user_email", with: "fathimaa@gmail.com"
+		fill_in "user_password", with: "passw"
+		fill_in "user_password_confirmation", with: "passw"
+		click_button "Submit"
+		expect(page).to have_content("Error! Email already exists. Please choose a different one.")	
 
-	# end
+	end
 		def login_user(email="fathimanuha0002@gmail.com",password="passw")
 			visit root_path
 			expect(page).to have_content("Email")
@@ -111,7 +112,7 @@ it "Invalid User " do
 	    end
 
 		expect(page).to have_xpath('/html/body/div[1]/div/table', wait: 10)
-		sleep(14)
+		# sleep(14)
 
 		 within :xpath, '/html/body/div[1]/div/table/tbody/tr[1]' do
 
@@ -185,6 +186,14 @@ it "Invalid User " do
 		end
 	end
 
+	it 'try invalid repayment' do 
+		login_user
+		loan_id = find(:xpath,'/html/body/div/div[3]/div/table/tbody/tr[2]/th').text
+		fill_in "loan_loan_id", with:loan_id
+		click_button "Repay"
+		expect(page).to have_content("Error! You loan is not yet open")
+	end
+
 	it 'value deducted from user and added to admin' do 
 
 		user = User.find_by(email:"fathimanuha0002@gmail.com")
@@ -210,6 +219,9 @@ it "Invalid User " do
 		expect(page).to have_content("Welcome #{user.name}")	
 
 		click_button "Delete Account"
+
+		expect(page).to have_content("#{user.name}, your account has been successfully been deleted")	
+
 
 		sleep(14)
 	end

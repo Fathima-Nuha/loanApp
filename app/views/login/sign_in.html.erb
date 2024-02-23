@@ -14,6 +14,12 @@
       <strong>Error!</strong> <%= flash[:error] %>
     </div>
     <%end%>
+
+    <% if flash[:success].present? %>
+    <div class="alert alert-info">
+      <%= flash[:success] %>
+    </div>
+    <%end%>
     
 	<div class="d-flex flex-column form-control mb-3">
 	<%=form.label :Email%>

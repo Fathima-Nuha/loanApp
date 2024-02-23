@@ -31,10 +31,13 @@ class LoginController < ApplicationController
   def register
 
     if User.exists?(email: user_params[:email])
+      p "User exists",user_params[:email]
       flash[:error] = "Email already exists. Please choose a different one."
-      redirect_to "/sign_up"
+      # redirect_to "/sign_up"
+      redirect_to sign_up_path
     else
       @user = User.create(user_params.merge(role: 'user'))
+      p "creating new user"
         if @user.save
          session[:user_id] = @user.id
           redirect_to user_dashboard_path
@@ -47,6 +50,7 @@ class LoginController < ApplicationController
   def delete_account
     @user = User.find(session[:user_id])
     @user.destroy
+    flash[:success] = "#{@user.name}, your account has been successfully been deleted"
     session[:user_id] = nil
     redirect_to root_path
   end

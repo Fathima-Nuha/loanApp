@@ -17,7 +17,23 @@ class UserController < ApplicationController
 
 	def repay_loan_details
 		loan_account_number = params[:loan][:loan_id][6..-1]
-		redirect_to loan_repayment_path(id:loan_account_number)
+		loan = Loan.find(loan_account_number)
+		
+		if loan
+			p "loan.status",loan.status
+			if loan.status == "Open" || loan.status == "Closed"
+			redirect_to loan_repayment_path(id:loan_account_number)
+			else 
+			flash[:error] = 'You loan is not yet open'
+	      	redirect_to user_dashboard_path
+
+			end
+		else
+			flash[:error] = 'Loan No: doesnt exist'
+	      	redirect_to user_dashboard_path
+
+
+		end
 	end
 
 	def loan_repayment
